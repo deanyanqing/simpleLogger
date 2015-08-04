@@ -6,8 +6,7 @@
  */
 
 #include "loggingDef.h"
-namespace haf_logging
-{
+
 
 const std::vector<std::string> severityLevelDescriptions ={ "trace",
                                                             "debug",
@@ -17,4 +16,4 @@ const std::vector<std::string> severityLevelDescriptions ={ "trace",
                                                             "fatal"};
 
 
-}
+

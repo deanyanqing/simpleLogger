@@ -10,25 +10,12 @@
 
 #include <string>
 #include <vector>
+#include "nLogger.h"
 
 
-
-namespace haf_logging
-{
-
-enum class SeverityLevel
-{
-  trace,
-  debug,
-  info,
-  warning,
-  error,
-  fatal
-};
 
 class NLogger;
 extern NLogger* gLogger;
-
 std::string basename( std::string const& pathname );
 
 /* @brief Write the log
@@ -50,5 +37,4 @@ std::string basename( std::string const& pathname );
 /**/
 extern const std::vector<std::string> severityLevelDescriptions ;
 
-} /* namespace haf_logging */
 #endif /* HAF_LOGGING_LOGGINGDEF_H_ */

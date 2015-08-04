@@ -5,9 +5,8 @@
  *      Author: haf
  */
 
-#include "nLogger.h"
+#include "loggingDef.h"
 #include <iostream>
-using namespace haf_logging;
 int main()
 {
 

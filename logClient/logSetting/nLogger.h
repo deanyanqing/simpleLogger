@@ -10,21 +10,18 @@
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/core.hpp>
-
 #include <boost/log/expressions.hpp>
 #include <boost/log/sinks/text_file_backend.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-#include <string>
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <libgen.h>
-#include "loggingDef.h"
-namespace haf_logging
-{
+
+#include <string>
 
 namespace logging = boost::log;
 namespace src = boost::log::sources;
@@ -32,6 +29,15 @@ namespace expr = boost::log::expressions;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
+enum class SeverityLevel
+{
+  trace,
+  debug,
+  info,
+  warning,
+  error,
+  fatal
+};
 
 
 struct MatchPathSeparator
@@ -87,6 +93,5 @@ void NLogger::printImpl(SeverityLevel severity, First parm1, Rest...parm)
 }
 */
 
-} /* namespace haf_logging */
 
 #endif /* LOGGING_NLOGGER_H_ */

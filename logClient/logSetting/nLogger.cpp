@@ -12,9 +12,7 @@
 #include <boost/phoenix/bind.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include "nLogger.h"
-namespace haf_logging
-{
-
+#include "loggingDef.h"
 
 NLogger* gLogger = new  NLogger("","");
 
@@ -83,4 +81,4 @@ void NLogger::changeLogFilter(SeverityLevel level)
 
 
 
-} /* namespace haf_logging */
+
