@@ -26,9 +26,9 @@ enum class ClientConnectionStatus
   client_disconnection
 };
 
-/* NOTE Assume running in the same machine */
+/* NOTE Assume running in the same type machine */
 /* network protocol between center and clients/user setting
- * Not directly use these but for your reference
+ * Only use in network decode
  */
 #define LOG_CLIENT_MESSAGE_ID 1001
 struct LogClientMessage

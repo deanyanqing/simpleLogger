@@ -42,14 +42,19 @@ void LogCenterServer::startReceive()
 
 static std::istringstream& operator >>(std::istringstream& stream ,LogClient& client)
 {
-
-
+  stream >> client.filterLevel ;
+  int clientsCompentNameLength;
+  stream >> clientsCompentNameLength;
+  /**/
   return stream;
 }
 
 static std::istringstream& operator >>(std::istringstream& stream, LogClientSetting& setting )
 {
-
+  stream >> setting.filterLevel ;
+  int clientsCompentNameLength;
+  stream >> clientsCompentNameLength;
+  /**/
   return stream;
 }
 
@@ -74,6 +79,7 @@ void LogCenterServer::handleReceive(const boost::system::error_code& error,std::
 
 try{
   bool messageValid = true;
+  int totalLength = recvBuffer.size();
   unsigned int headerLength = sizeof(LogMessageID);
   std::istringstream is(std::string(recvBuffer.begin(), recvBuffer.begin() + headerLength));
   LogMessageID id =0;
@@ -88,6 +94,7 @@ try{
   {
     std::string archiveData(recvBuffer.begin() + headerLength, recvBuffer.end());
     std::istringstream archiveStream(archiveData);
+    std::string content(recvBuffer.begin()+ headerLength + sizeof(ClientConnectionStatus), recvBuffer.end());
 
     switch(id)
     {
@@ -95,6 +102,7 @@ try{
         {
           LogClientSetting setting;
           archiveStream >> setting;
+
           settingCallback(setting);
           break;
         }
@@ -102,6 +110,7 @@ try{
         {
           LogClient client;
           archiveStream >> client;
+          client.moduleName = content;
           /*Generate hash code as ID*/
           std::hash<std::string> hasher;
           std::size_t hash = hasher(client.moduleName);

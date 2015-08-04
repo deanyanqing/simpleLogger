@@ -15,9 +15,8 @@
 namespace haf_logging
 {
 
-#define DEFAUNT_FILE ".haflog"
-NLogger* gLogger = new  NLogger("","");
 
+NLogger* gLogger = new  NLogger("","");
 
 
 
@@ -80,5 +79,8 @@ void NLogger::changeLogFilter(SeverityLevel level)
 {
   filter = level;
 }
+
+
+
 
 } /* namespace haf_logging */

@@ -21,7 +21,7 @@ add_executable(logClientTest
   test/test.cpp
 )
 
-set(CC_PARAMS "-std=c++11 -Wall -pedantic -Winline -Wsign-conversion -Wsuggest-attribute=const -Wstrict-overflow=5 -Wunsafe-loop-optimizations -Wextra -Wcast-align -Wconversion -Wdisabled-optimization -fasynchronous-unwind-tables -fdiagnostics-show-option -Werror=format -Werror=return-type 
+set(CC_PARAMS "-std=c++11  -pedantic -Winline -Wsign-conversion -Wsuggest-attribute=const -Wstrict-overflow=5 -Wunsafe-loop-optimizations -Wextra -Wcast-align -Wconversion -Wdisabled-optimization -fasynchronous-unwind-tables -fdiagnostics-show-option -Werror=format -Werror=return-type 
  -Werror=return-local-addr -Werror=write-strings -Wshadow -Wno-unused-parameter   -ggdb3")
  
 target_include_directories (logClientLibrary PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

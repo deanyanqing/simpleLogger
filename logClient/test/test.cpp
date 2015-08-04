@@ -7,14 +7,12 @@
 
 #include "nLogger.h"
 #include <iostream>
-#include <thread>
 using namespace haf_logging;
 int main()
 {
 
-  std::thread thread1;
-  std::thread thread2;
 
+  std::cout << "Input 0 stands <trace>, 1 stands <error>" << std::endl;
   int input;
   std::cin >> input;
  if(0 == input )
@@ -31,6 +29,7 @@ int main()
   NLOG(SeverityLevel::trace ) << "it is trace";
   NLOG(SeverityLevel::warning ) << "it is warning";
   NLOG(SeverityLevel::error ) << "it is error";
+
 
   return 0;
 }

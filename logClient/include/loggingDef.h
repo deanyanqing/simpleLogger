@@ -11,30 +11,10 @@
 #include <string>
 #include <vector>
 
-#include <boost/log/trivial.hpp>
-#include <boost/log/core.hpp>
 
-#include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-
-namespace logging = boost::log;
-namespace src = boost::log::sources;
-namespace expr = boost::log::expressions;
-namespace sinks = boost::log::sinks;
-namespace keywords = boost::log::keywords;
 
 namespace haf_logging
 {
-
-enum class LoggerType
-{
-  LOCAL_LOGER,
-  REMOTE_LOGER
-};
 
 enum class SeverityLevel
 {
@@ -45,6 +25,27 @@ enum class SeverityLevel
   error,
   fatal
 };
+
+class NLogger;
+extern NLogger* gLogger;
+
+std::string basename( std::string const& pathname );
+
+/* @brief Write the log
+ * usage : NLOG(SeverityLevel::trace) << "" << ""
+ */
+
+#define NLOG(severityLevel)   \
+    BOOST_LOG_SEV( *(gLogger->getLogger()), severityLevel) \
+  << basename( std::string(__FILE__)) << ":"<< __LINE__ << "<" << severityLevelDescriptions[static_cast<int>(severityLevel)]  << "> "
+
+#define FATAL_LOG() \
+    BOOST_LOG_SEV( *(gLogger->getLogger()), SeverityLevel::fatal) \
+    << basename( std::string(__FILE__)) << ":"<< __LINE__  << "<" << severityLevelDescriptions[static_cast<int>(SeverityLevel::fatal)]  << "> "
+
+
+/*The default log file name*/
+#define DEFAUNT_FILE ".haflog"
 
 /**/
 extern const std::vector<std::string> severityLevelDescriptions ;
