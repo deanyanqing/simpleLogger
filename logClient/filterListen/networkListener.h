@@ -11,10 +11,11 @@
 class NetworkListener :public BaseLogFilterListener
 {
 public:
-  NetworkListener();
+  NetworkListener(std::string moduleName, std::function<void(SeverityLevel)>);
+  NetworkListener()=delete;
   ~NetworkListener();
 
-  void statListen();
+  void startListen();
 };
 
 #endif /* LOGGING_LOGCLIENT_FILTERLISTEN_NETWORKLISTENER_H_ */

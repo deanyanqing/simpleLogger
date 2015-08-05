@@ -7,14 +7,18 @@
 
 #include "networkListener.h"
 
-NetworkListener::NetworkListener()
+NetworkListener::NetworkListener(std::string moduleName, std::function<void(SeverityLevel)> fun):BaseLogFilterListener(moduleName,fun)
 {
-  // TODO Auto-generated constructor stub
+
 
 }
 
 NetworkListener::~NetworkListener()
 {
-  // TODO Auto-generated destructor stub
+
 }
 
+void NetworkListener::startListen()
+{
+
+}

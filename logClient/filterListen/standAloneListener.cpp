@@ -7,14 +7,29 @@
 
 #include "standAloneListener.h"
 
-StandAloneListener::StandAloneListener()
+StandAloneListener::StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)> fun):BaseLogFilterListener(moduleName,fun)
 {
-  // TODO Auto-generated constructor stub
+
+  initSharedMem();
 
 }
 
 StandAloneListener::~StandAloneListener()
 {
-  // TODO Auto-generated destructor stub
+
 }
 
+void StandAloneListener::startListen()
+{
+
+}
+
+void StandAloneListener::initSharedMem()
+{
+  sharedMemory = std::make_shared<bip::managed_shared_memory>(boost::interprocess::create_only,getModuleName().c_str(), 1 );
+
+  typedef std::pair<std::string, SeverityLevel> MyType;
+  MyType *instance = sharedMemory->construct<MyType>
+           (getModuleName())  //name of the object
+           (getModuleName(), SeverityLevel::debug);
+}

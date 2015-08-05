@@ -10,6 +10,10 @@
 
 #include "nLogger.h"
 #include <functional>
+
+/*
+ * @brief Listen on the setting from the user and invoke the callback
+ * */
 class BaseLogFilterListener
 {
 public:
@@ -17,13 +21,16 @@ public:
   BaseLogFilterListener()=delete;
   virtual ~BaseLogFilterListener();
 
-  virtual void statListen()=0;
+  virtual void startListen()=0;
+  inline void setGetServerityFun(std::function<SeverityLevel()> fun){getServerityLevel = fun;}
 
 protected:
   void doFilter(std::string& module ,SeverityLevel);
-  bool isTarget(std::string& );
+  inline std::string& getModuleName(){return moduleName;}
+
 private:
   std::function<void(SeverityLevel)> filterCallback;
+  std::function<SeverityLevel()> getServerityLevel;
   std::string moduleName;
 };
 

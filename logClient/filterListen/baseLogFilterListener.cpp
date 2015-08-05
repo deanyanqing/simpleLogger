@@ -20,11 +20,11 @@ BaseLogFilterListener::~BaseLogFilterListener()
 
 void BaseLogFilterListener::doFilter(std::string& module,SeverityLevel level)
 {
+  if(0 == moduleName.compare(module))
+  {
+    filterCallback(level);
+  }
 
-  filterCallback(level);
 }
 
-bool BaseLogFilterListener::isTarget(std::string& module )
-{
-  return 0 == moduleName.compare(module);
-}
+

@@ -20,8 +20,9 @@
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <libgen.h>
-
 #include <string>
+#include "loggingConstantDef.h"
+
 
 namespace logging = boost::log;
 namespace src = boost::log::sources;
@@ -29,15 +30,7 @@ namespace expr = boost::log::expressions;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
-enum class SeverityLevel
-{
-  trace,
-  debug,
-  info,
-  warning,
-  error,
-  fatal
-};
+
 
 
 struct MatchPathSeparator

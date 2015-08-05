@@ -10,12 +10,12 @@
 #include "standAloneListener.h"
 LogFilterListener::LogFilterListener()
 {
-  // TODO Auto-generated constructor stub
+
 
 }
 
 LogFilterListener::~LogFilterListener()
 {
-  // TODO Auto-generated destructor stub
+
 }
 

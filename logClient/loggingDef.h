@@ -10,12 +10,14 @@
 
 #include <string>
 #include <vector>
+#include "loggingConstantDef.h"
 #include "nLogger.h"
-
 
 
 class NLogger;
 extern NLogger* gLogger;
+
+
 std::string basename( std::string const& pathname );
 
 /* @brief Write the log
@@ -31,10 +33,7 @@ std::string basename( std::string const& pathname );
     << basename( std::string(__FILE__)) << ":"<< __LINE__  << "<" << severityLevelDescriptions[static_cast<int>(SeverityLevel::fatal)]  << "> "
 
 
-/*The default log file name*/
-#define DEFAUNT_FILE ".haflog"
 
-/**/
 extern const std::vector<std::string> severityLevelDescriptions ;
 
 #endif /* HAF_LOGGING_LOGGINGDEF_H_ */
