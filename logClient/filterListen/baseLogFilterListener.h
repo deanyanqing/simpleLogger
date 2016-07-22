@@ -10,9 +10,9 @@
 
 #include "nLogger.h"
 #include <functional>
-
+#include <string>
 /*
- * @brief Listen on the setting from the user and invoke the callback
+ * @brief Base class of handling the log setting update
  * */
 class BaseLogFilterListener
 {
@@ -27,6 +27,8 @@ public:
 protected:
   void doFilter(std::string& module ,SeverityLevel);
   inline std::string& getModuleName(){return moduleName;}
+
+  void registerLogUpdateCallback();
 
 private:
   std::function<void(SeverityLevel)> filterCallback;

@@ -11,26 +11,33 @@
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <memory>
 #include <thread>
-namespace bip = boost::interprocess;
+using namespace boost::interprocess;
 /*
  * @class StandAloneListener
- * @brief StandAlone log filter listen on shared_memory
- * Use 1 byte to indicate which log level to filter
+ * @brief Register myself to log Agent and receive the log setting from log Agent. Execute the callback after receiving log setting.
+ *        Maintain its' shm to receive the log setting.
+ *   Register   string: Register moduleName
+ *   Unregister string: Unregister moduleName
  * */
 class StandAloneListener:public BaseLogFilterListener
 {
 public:
   StandAloneListener()=delete;
-  StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)>);
+  StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)>, SeverityLevel level = info);
   ~StandAloneListener();
-  void startListen();
+  virtual void startListen();
+
 
 private:
-  void initSharedMem();
+  /** @brief Register myself to log Agent with my client id and shm address
+   *  @param clientId: Unique client id. Log agent use this to distinguish different client
+   * */
+  void registerMyself(const std::string& clientId);
   void listenLoop();
 private:
-  std::shared_ptr< bip::managed_shared_memory>  sharedMemory;
   std::thread shmListenThread;
+  std::shared_ptr<managed_shared_memory> sharedMemory;
+  std::string moduleName;
 };
 
 #endif /* LOGGING_LOGCLIENT_FILTERLISTEN_STANDALONELISTENER_H_ */
