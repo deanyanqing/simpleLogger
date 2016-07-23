@@ -9,6 +9,7 @@
 #define LOGGING_LOGCLIENT_FILTERLISTEN_STANDALONELISTENER_H_
 #include "baseLogFilterListener.h"
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/sync/named_condition.hpp>
 #include <memory>
 #include <thread>
 using namespace boost::interprocess;
@@ -23,21 +24,29 @@ class StandAloneListener:public BaseLogFilterListener
 {
 public:
   StandAloneListener()=delete;
-  StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)>, SeverityLevel level = info);
+  /**@brief Constructor of stand alone lister
+   * @param moduleName: Use as unique id for current log client
+   * @param callback:
+   * @param level: Initialize  the log level
+   * */
+  StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)> callback, SeverityLevel level = SeverityLevel::info);
+
   ~StandAloneListener();
   virtual void startListen();
 
 
 private:
-  /** @brief Register myself to log Agent with my client id and shm address
-   *  @param clientId: Unique client id. Log agent use this to distinguish different client
+  /** @brief Register myself to log Agent with module name.Module name should be unique
    * */
-  void registerMyself(const std::string& clientId);
+  void registerMyself();
   void listenLoop();
 private:
-  std::thread shmListenThread;
+  std::shared_ptr<std::thread> shmListenThread;
   std::shared_ptr<managed_shared_memory> sharedMemory;
   std::string moduleName;
+  named_condition myShmConditonVar;
+  named_mutex myShmMutex;
+  bool running;
 };
 
 #endif /* LOGGING_LOGCLIENT_FILTERLISTEN_STANDALONELISTENER_H_ */
