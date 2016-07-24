@@ -7,24 +7,12 @@
 
 #include "baseLogFilterListener.h"
 
-BaseLogFilterListener::BaseLogFilterListener( std::string moduleName,std::function<void(SeverityLevel)> fun)
-{
-
-  filterCallback = fun;
+BaseLogFilterListener::BaseLogFilterListener(std::string moduleName,
+		std::function<void(SeverityLevel)> fun) : moduleName(moduleName){
+	filterCallback = fun;
 }
 
-BaseLogFilterListener::~BaseLogFilterListener()
-{
+BaseLogFilterListener::~BaseLogFilterListener() {
 
 }
-
-void BaseLogFilterListener::doFilter(std::string& module,SeverityLevel level)
-{
-  if(0 == moduleName.compare(module))
-  {
-    filterCallback(level);
-  }
-
-}
-
 

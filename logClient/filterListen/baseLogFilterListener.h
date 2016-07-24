@@ -14,26 +14,17 @@
 /*
  * @brief Base class of handling the log setting update
  * */
-class BaseLogFilterListener
-{
+class BaseLogFilterListener {
 public:
-  BaseLogFilterListener(std::string moduleName, std::function<void(SeverityLevel)>);
-  BaseLogFilterListener()=delete;
-  virtual ~BaseLogFilterListener();
-
-  virtual void startListen()=0;
-  inline void setGetServerityFun(std::function<SeverityLevel()> fun){getServerityLevel = fun;}
+	BaseLogFilterListener(std::string moduleName,
+			std::function<void(SeverityLevel)>);
+	BaseLogFilterListener() = delete;
+	virtual ~BaseLogFilterListener();
+	virtual void startListen()=0;
 
 protected:
-  void doFilter(std::string& module ,SeverityLevel);
-  inline std::string& getModuleName(){return moduleName;}
-
-  void registerLogUpdateCallback();
-
-private:
-  std::function<void(SeverityLevel)> filterCallback;
-  std::function<SeverityLevel()> getServerityLevel;
-  std::string moduleName;
+	std::function<void(SeverityLevel)> filterCallback;
+	std::string moduleName;
 };
 
 #endif /* LOGGING_LOGCLIENT_FILTERLISTEN_BASELOGFILTERLISTENER_H_ */

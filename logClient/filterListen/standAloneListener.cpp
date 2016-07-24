@@ -24,31 +24,32 @@ const static std::string UNREGISTER_PREFIX = "Unregister ";
 //@todo Replace with mutex from client later
 static std::mutex log_register_shm_mutex;
 
-StandAloneListener::StandAloneListener(std::string moduleName, std::function<void(SeverityLevel)> fun,SeverityLevel level)
-:myShmConditonVar{open_or_create,std::string(moduleName+"cnd").c_str()}
-,myShmMutex(open_or_create,std::string(moduleName+"mutex").c_str()),BaseLogFilterListener(moduleName,fun)
-{
-	this->moduleName = moduleName;
+StandAloneListener::StandAloneListener(std::string moduleName,
+		std::function<void(SeverityLevel)> fun, SeverityLevel level) :
+		myShmConditonVar { open_or_create,
+				std::string(moduleName + "cnd").c_str() }, myShmMutex(
+				open_or_create, std::string(moduleName + "mutex").c_str()), BaseLogFilterListener(
+				moduleName, fun) {
+	currentLogSetting = static_cast<uint>(level);
 	shared_memory_object::remove(moduleName.c_str());
-	sharedMemory = std::make_shared<managed_shared_memory>(create_only,moduleName.c_str(), SHARED_MEMORY_SIZE);
-	uint* logLevel = sharedMemory->find_or_construct<uint>(LOG_LEVEL_NAME)(static_cast<uint>(level));
+	sharedMemory = std::make_shared<managed_shared_memory>(create_only,
+			moduleName.c_str(), SHARED_MEMORY_SIZE);
+	uint* logLevel = sharedMemory->find_or_construct<uint>(LOG_LEVEL_NAME)(
+			static_cast<uint>(level));
 	myShmConditonVar.notify_all();
 	running = true;
-	shmListenThread = std::make_shared<std::thread>(&StandAloneListener::startListen,this);
+	shmListenThread = std::make_shared<std::thread>(
+			&StandAloneListener::startListen, this);
 	startListen();
 }
 
-static inline bool writeData2shm( const std::string& content)
-{
+static inline bool writeData2shm(const std::string& content) {
 	managed_shared_memory* shmPtr = nullptr;
 	//Check the shared memory whether created or not
-	try
-	{
+	try {
 		managed_shared_memory register_shm(open_only, REGISTER_LOG_SHM.c_str());
 		shmPtr = &register_shm;
-	}
-	catch(...)
-	{
+	} catch (...) {
 		return false;
 	};
 
@@ -56,17 +57,17 @@ static inline bool writeData2shm( const std::string& content)
 	named_mutex shm_mutex(open_only, MUTEX_REGISTER_LOG_SHM);
 	shm_mutex.lock();
 	log_register_shm_mutex.lock();
-	std::pair<std::string *,std::size_t> ret = shmPtr->find<std::string>(NAME_OF_STRING_IN_SHM);
+	std::pair<std::string *, std::size_t> ret = shmPtr->find<std::string>(
+			NAME_OF_STRING_IN_SHM);
 
 	log_register_shm_mutex.unlock();
 	shm_mutex.unlock();
 	return true;
 }
 
-StandAloneListener::~StandAloneListener()
-{
+StandAloneListener::~StandAloneListener() {
 	//Unregister myself in log agent,here we don't need to double confirm the content wrote success
-	std::string content(UNREGISTER_PREFIX+moduleName);
+	std::string content(UNREGISTER_PREFIX + moduleName);
 	writeData2shm(content);
 	//release my shared memory object
 	shared_memory_object::remove(moduleName.c_str());
@@ -76,42 +77,36 @@ StandAloneListener::~StandAloneListener()
 
 }
 
-void StandAloneListener::startListen()
-{
+void StandAloneListener::startListen() {
 	registerMyself();
-	while(running)
-	{
-		scoped_lock<named_mutex> lock{myShmMutex};
+	while (running) {
+		scoped_lock<named_mutex> lock { myShmMutex };
 		myShmConditonVar.wait(lock);
-		if(false == running)
-		{
+		if (false == running) {
 			break;
-		}
-		else
-		{
-
+		} else {
+			std::pair<unsigned int*, long unsigned int> logLevel = sharedMemory->find<uint>(LOG_LEVEL_NAME);
+			if (currentLogSetting != *(logLevel.first)) {
+				currentLogSetting = *(logLevel.first);
+				filterCallback(static_cast<SeverityLevel>(currentLogSetting));
+			}
 		}
 	}
 
 }
 
 const static int MAX_TRY_NUMBER = 10;
-void StandAloneListener::registerMyself()
-{
+void StandAloneListener::registerMyself() {
 	std::string content(REGISTER_PREFIX + moduleName);
 
 	int count = 0;
-	while(count < MAX_TRY_NUMBER)
-	{
-		if(true == writeData2shm(content))
-		{
+	while (count < MAX_TRY_NUMBER) {
+		if (true == writeData2shm(content)) {
 			break;
-		}
-		else
-		{
+		} else {
 			count++;
 			//Adding reminder log for start log agent
-			std::this_thread::sleep_for (std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 	}
 }

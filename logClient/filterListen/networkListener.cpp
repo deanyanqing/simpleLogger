@@ -7,18 +7,16 @@
 
 #include "networkListener.h"
 
-NetworkListener::NetworkListener(std::string moduleName, std::function<void(SeverityLevel)> fun):BaseLogFilterListener(moduleName,fun)
-{
-
-
-}
-
-NetworkListener::~NetworkListener()
-{
+NetworkListener::NetworkListener(std::string moduleName,
+		std::function<void(SeverityLevel)> fun) :
+		BaseLogFilterListener(moduleName, fun) {
 
 }
 
-void NetworkListener::startListen()
-{
+NetworkListener::~NetworkListener() {
+
+}
+
+void NetworkListener::startListen() {
 
 }
