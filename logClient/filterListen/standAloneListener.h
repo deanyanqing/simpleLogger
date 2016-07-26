@@ -32,8 +32,8 @@ public:
 			std::function<void(SeverityLevel)> callback, SeverityLevel level =
 					SeverityLevel::info);
 
-	~StandAloneListener();
-	virtual void startListen();
+  ~StandAloneListener();
+  virtual void startListen();
 
 private:
 	/** @brief Register myself to log Agent with module name.Module name should be unique
@@ -47,6 +47,7 @@ private:
 	bool running;
 
 	uint currentLogSetting;
+
 };
 
 #endif /* LOGGING_LOGCLIENT_FILTERLISTEN_STANDALONELISTENER_H_ */

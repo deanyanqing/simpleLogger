@@ -21,6 +21,7 @@ const static char* LOG_LEVEL_NAME = "LogLevel";
 const static std::string REGISTER_PREFIX = "Register ";
 const static std::string UNREGISTER_PREFIX = "Unregister ";
 
+
 //@todo Replace with mutex from client later
 static std::mutex log_register_shm_mutex;
 
@@ -57,23 +58,14 @@ static inline bool writeData2shm(const std::string& content) {
 	named_mutex shm_mutex(open_only, MUTEX_REGISTER_LOG_SHM);
 	shm_mutex.lock();
 	log_register_shm_mutex.lock();
+
 	std::pair<std::string *, std::size_t> ret = shmPtr->find<std::string>(
 			NAME_OF_STRING_IN_SHM);
 
+	*(ret.first) = content;
 	log_register_shm_mutex.unlock();
 	shm_mutex.unlock();
 	return true;
-}
-
-StandAloneListener::~StandAloneListener() {
-	//Unregister myself in log agent,here we don't need to double confirm the content wrote success
-	std::string content(UNREGISTER_PREFIX + moduleName);
-	writeData2shm(content);
-	//release my shared memory object
-	shared_memory_object::remove(moduleName.c_str());
-	running = false;
-	myShmConditonVar.notify_all();
-	shmListenThread->join();
 
 }
 
@@ -110,3 +102,19 @@ void StandAloneListener::registerMyself() {
 		}
 	}
 }
+
+StandAloneListener::~StandAloneListener()
+{
+	//Unregister myself in log agent,here we don't need to double confirm the content wrote success
+	std::string content(UNREGISTER_PREFIX+moduleName);
+	writeData2shm(content);
+	//release my shared memory objec
+	shared_memory_object::remove(moduleName.c_str());
+	running = false;
+	myShmConditonVar.notify_all();
+	shmListenThread->join();
+
+}
+
+
+
