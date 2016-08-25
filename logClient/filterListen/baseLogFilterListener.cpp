@@ -8,11 +8,14 @@
 #include "baseLogFilterListener.h"
 
 BaseLogFilterListener::BaseLogFilterListener(std::string moduleName,
-		std::function<void(SeverityLevel)> fun) : moduleName(moduleName){
-	filterCallback = fun;
+        std::function<void(SeverityLevel)> fun) :
+        moduleName(moduleName)
+{
+    filterCallback = fun;
 }
 
-BaseLogFilterListener::~BaseLogFilterListener() {
+BaseLogFilterListener::~BaseLogFilterListener()
+{
 
 }
 

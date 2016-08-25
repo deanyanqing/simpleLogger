@@ -21,8 +21,7 @@
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <libgen.h>
 #include <string>
-#include "loggingConstantDef.h"
-
+#include "loggingDef.h"
 
 namespace logging = boost::log;
 namespace src = boost::log::sources;
@@ -30,9 +29,7 @@ namespace expr = boost::log::expressions;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
-
-
-
+class BaseLogFilterListener;
 struct MatchPathSeparator
 {
     bool operator()( char ch ) const
@@ -42,15 +39,22 @@ struct MatchPathSeparator
 };
 
 
-
+/** @brief Wrapper of boost log
+ *  Create LogFiterListern Create LogFiterListern and  react to the log setting from log agent
+ *  **/
 class NLogger
 {
 public:
   NLogger()=delete;
   ~NLogger()=default;
-  NLogger(std::string logFile,std::string moduleName);
+  NLogger(std::string logFile,std::string moduleName,LogFilterListenType type);
 
   boost::shared_ptr< src::severity_logger< SeverityLevel > > getLogger(){return slg;}
+
+private:
+  /** @brief Callback to LogFiterListern to handle log level change
+   *  @param level : Target log level
+   *  */
   void changeLogFilter(SeverityLevel level);
 
 
@@ -58,13 +62,14 @@ public:
   template< typename...Args >
   void log(SeverityLevel severity , Args...args);
 private:
-  void init_logging();
+  void initLogging();
 
   template<typename First, typename...Rest >
     void printImpl(SeverityLevel severity,First parm1, Rest...parm);
 
 private:
   boost::shared_ptr< src::severity_logger< SeverityLevel > > slg;
+  std::shared_ptr<BaseLogFilterListener> logListener;
 
 };
 
